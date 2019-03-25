@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d '{"firstName":"Michael", "lastName":"Jordan", "email":"mj@hotmail.com"}' http://localhost:8081/api/1/contacts

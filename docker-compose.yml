@@ -1,0 +1,30 @@
+version: "3"
+services:
+
+  database:
+    image: mysql/mysql-server:latest
+    container_name: mysql-maxwell
+    environment:
+      MYSQL_ROOT_PASSWORD: "password-mysql-maxwell"
+    volumes:
+      - ./db-data:/var/lib/mysql
+      - ./web/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - backend
+
+  web:
+    build: ./web
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
+    depends_on:
+      - database
+
+networks:
+  backend:
+
+volumes:
+  db-data:
