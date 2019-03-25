@@ -9,8 +9,6 @@ services:
     volumes:
       - ./db-data:/var/lib/mysql
       - ./web/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-    ports:
-      - "3306:3306"
     networks:
       - backend
 
