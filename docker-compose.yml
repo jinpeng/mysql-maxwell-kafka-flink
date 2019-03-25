@@ -1,6 +1,15 @@
 version: "3"
 services:
 
+  web:
+    build: ./web
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
+    depends_on:
+      - database
+
   database:
     image: mysql/mysql-server:latest
     container_name: mysql-maxwell
@@ -9,13 +18,21 @@ services:
     volumes:
       - ./db-data:/var/lib/mysql
       - ./web/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      #- ./maxwell/initialdb.sql:/docker-entrypoint-initdb.d/initialdb.sql
     networks:
       - backend
 
-  web:
-    build: ./web
-    ports:
-      - "8081:8081"
+  maxwell:
+    image: zendesk/maxwell
+    environment:
+      MYSQL_USERNAME: "maxwell"
+      MYSQL_PASSWORD: "password-maxwell"
+      MYSQL_HOST: "database"
+    volumes:
+      - ./maxwell/wait-for:/app/bin/wait-for
+    command: sh -c "bin/wait-for web:8081 -t 30 -- bin/maxwell --user=$MYSQL_USERNAME --password=$MYSQL_PASSWORD --host=$MYSQL_HOST --producer=stdout"
+    #command: sh -c "sleep 30s && bin/maxwell --user=$MYSQL_USERNAME --password=$MYSQL_PASSWORD --host=$MYSQL_HOST --producer=stdout"
+    #command: sh -c "sleep 24h"
     networks:
       - backend
     depends_on:

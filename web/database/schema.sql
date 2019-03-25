@@ -4,6 +4,12 @@ CREATE USER 'contacts'@'localhost' IDENTIFIED BY 'password';
 CREATE USER 'contacts'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON * . * TO 'contacts'@'%';
 GRANT ALL PRIVILEGES ON * . * TO 'contacts'@'localhost';
+
+CREATE USER 'maxwell'@'%' IDENTIFIED BY 'password-maxwell';
+GRANT ALL ON maxwell.* TO 'maxwell'@'%';
+GRANT SELECT, REPLICATION CLIENT, REPLICATION SLAVE ON *.* TO 'maxwell'@'%';
+ALTER USER 'maxwell'@'%' IDENTIFIED WITH mysql_native_password BY 'password-maxwell';
+
 --
 -- Table structure for table `contact`
 --
